@@ -1,8 +1,8 @@
 ---
-title: Swechha
+title: About me
 ---
 
-### Hi 👋 I'm Swechha!
+### Hi 👋 I'm Swechha Singh!
 
 I’m open for new opportunities as a Machine Learning Engineer.
 
