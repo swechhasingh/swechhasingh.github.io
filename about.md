@@ -1,9 +1,9 @@
 ---
-layout: "page"
-title: "About me"
+layout: page
+title: About
 ---
 
-### Hi 👋 I'm Swechha Singh!
+### 👋 Hi, This is Swechha Singh!
 
 I’m open for new opportunities as a Machine Learning Engineer.
 
