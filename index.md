@@ -1,3 +1,5 @@
-*Welcome to my first blogging website*.
+*Welcome to Swechha's blog*.
+
+<p align="centre"><i>"If you want to master something, teach it. The more you teach, the better you learn." -Richard Feynman</i></p>
 
 Here I will be sharing my learnings as I explore the world of **machine learning/deep learning** and some random stuff that I find interesting.
