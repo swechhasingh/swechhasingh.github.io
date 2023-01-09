@@ -5,7 +5,7 @@ title: About
 
 ### 👋 Hi, This is Swechha Singh!
 
-I’m open to new opportunities focusing on vision-language applications of machine learning/deep learning.
+I'm fascinated by the field of machine learning and its potential to solve various interdisciplinary problems. I'm open to new opportunities to work on some cool and impactful ideas to solve problems in vision-language field.
 
 I have **two** years of industry work experience building end-to-end ML systems for genomics data (single-cell RNA sequencing data). I did a professional **master's** in **Machine Learning** from [Mila](https://mila.quebec/en/person/swechha/), Université de Montréal and bachelor's in Electrical Engineering from IITK (Indian Institute of Technology Kanpur), India, in 2016.
 
@@ -16,8 +16,6 @@ Last summer, I worked on a cool side project: [Handwriting mimic app](https://yo
 I have worked on various machine learning techniques ranging from classical Matrix Factorization to deep neural networks such as CNNs, RNNs, Auto-encoder, Transformer, etc. I've studied various graduate courses: Machine Learning, Deep Learning, Computer Vision, NLP, and Probabilistic Graphical Models, and undergrad courses: Probability & Statistics, Linear Algebra, Data Structures and Algorithms, and Intro to C programming.
 
 During my undergrad years, I also worked as an **Android Developer**, and after graduation, I spent ten months at Citibank, India as a **Technology Analyst**.
-
-I'm fascinated by the field of machine learning and its potential to solve various interdisciplinary problems. I'm open for collaboration to work on some cool and impactful ideas to solve problems at the intersection of computer vision and NLP. 
 
 Apart from work, you will find me
 * getting better at **dancing** (Jazz funk, K-POP)
