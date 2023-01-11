@@ -5,7 +5,7 @@ title: About
 
 ### 👋 Hi, This is Swechha Singh!
 
-I'm fascinated by the field of machine learning and its potential to solve various interdisciplinary problems. I'm open to new opportunities to work on some cool and impactful ideas to solve problems in vision-language field.
+I’m fascinated by machine learning and its potential to solve diverse interdisciplinary problems. I’m open to new opportunities to work on some cool and impactful ideas to solve problems in the vision-language field.
 
 I have **two** years of industry work experience building end-to-end ML systems for genomics data (single-cell RNA sequencing data). I did a professional **master's** in **Machine Learning** from [Mila](https://mila.quebec/en/person/swechha/), Université de Montréal and bachelor's in Electrical Engineering from IITK (Indian Institute of Technology Kanpur), India, in 2016.
 
