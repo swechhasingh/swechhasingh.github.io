@@ -14680,9 +14680,8 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="2.-Data-collection">2. Data collection<a class="anchor-link" href="#2.-Data-collection">&#182;</a></h4><p>To train a machine learning system we need example dataset. In our case, we will need a dataset of English names.\
-We will be using the same <a href="https://github.com/karpathy/makemore/blob/master/names.txt">names.txt</a> used in Andrej Karpathy's makemore lecture series.</p>
-
+<h4 id="2.-Data-collection">2. Data collection<a class="anchor-link" href="#2.-Data-collection">&#182;</a></h4><p>To train a machine learning system we need example dataset. In our case, we will need a dataset of English names.</p>
+<p>We will be using the same [names.txt](https://github.com/karpathy/makemore/blob/master/names.txt) used in Andrej Karpathy's makemore lecture series.</p>
 </div>
 </div>
 </div>
@@ -14769,7 +14768,7 @@ Length of longest word: 15 (muhammadibrahim) and shortest word: 2 (an)
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Since our goal is to generate new words, we need to tell the model about start and end of a word. To represent the start of a word, \<S> or \<Start> token is used and similarly, to represnt the end of a word \<E> or \<End> token is used. We will be using the same token "<strong>.</strong>" for start and end token.</p>
+<p>Since our goal is to generate new words, we need to tell the model about start and end of a word. To represent the start of a word, &lt;Start&gt; token is used and similarly, to represnt the end of a word &lt;End&gt; token is used. We will be using the same token "<strong>.</strong>" for start and end token.</p>
 
 </div>
 </div>
@@ -14950,7 +14949,7 @@ Total number of bigrams in the dataset: 228146
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>What does the bigram count dictionary tell?\
+<p>What does the bigram count dictionary tell?<br>
 (x,y): 9 means how many times x followed by y occurred in the dataset</p>
 
 </div>
@@ -15100,21 +15099,21 @@ jp-needs-light-background
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="4.Modeling">4.Modeling<a class="anchor-link" href="#4.Modeling">&#182;</a></h4><p>Given current character, predict what would be the next character.\
-<strong>Baseline:</strong> \
-A simple baseline model would be: given a character, if all characters have equal probability (1/27=0.037) of occuring as the next character.\
-<strong>Proposed model:</strong> \
+<h4 id="4.Modeling">4.Modeling<a class="anchor-link" href="#4.Modeling">&#182;</a></h4><p>Given current character, predict what would be the next character.<br>
+<strong>Baseline:</strong>
+A simple baseline model would be: given a character, if all characters have equal probability (1/27=0.037) of occuring as the next character.<br>
+<strong>Proposed model:</strong>
 Learn the probability distribution over all the characters (entire vocabulary) given a character. There are two ways to use this probability distribution to predict the next character given a character:</p>
 <ul>
 <li>Predict the character with maximum probablity, but this would generate only one word for a fixed starting character.</li>
 <li>Sampling from the probability distribution will solve the above problem; now, for a fixed starting character, we can generate many different words because every time, a different character will be sampled from the distribution (with replacement).</li>
 </ul>
-<p>How can use the count_table to get these probabilities?\
-As we know,\
-<code>count_table[x,y]</code> = how many time <code>x</code> (previous character) was followed by <code>y</code> (next character)\
-\
-row corresponding to character <em>x</em> (<code>count_table[x,:</code>]):\
-If <code>count_table[x,:]</code> is normalized by sum of all the counts in that row, then\
+<p>How can use the count_table to get these probabilities?<br>
+As we know,<br>
+<code>count_table[x,y]</code> = how many time <code>x</code> (previous character) was followed by <code>y</code> (next character)
+<br>
+row corresponding to character <em>x</em> (<code>count_table[x,:</code>]):<br>
+If <code>count_table[x,:]</code> is normalized by sum of all the counts in that row, then<br>
 <code>count_table[x,y]</code> = probability of <code>x</code> (previous character) followed by <code>y</code> (next character)</p>
 <p>So, row <code>count_table[x,:]</code> gives a probability distribution over all the characters as the next character given character <em><code>x</code></em></p>
 <p><strong>Training: Computing the probability table</strong></p>
@@ -15149,8 +15148,8 @@ If <code>count_table[x,:]</code> is normalized by sum of all the counts in that 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="Generation:">Generation:<a class="anchor-link" href="#Generation:">&#182;</a></h4><p>This probability table can be used to generate new plausible English names.\
-Row <code>count_table[x,:]</code>: Probability distribution over all the characters as the next character given character <em>x</em> is a <em>categorical</em> distribution (aka <em>multinoulli</em> distribution, a special case of the <strong>multinomial</strong> distribution) over <code>vocab_size</code>(27) categories (character).\
+<h4 id="Generation:">Generation:<a class="anchor-link" href="#Generation:">&#182;</a></h4><p>This probability table can be used to generate new plausible English names.<br>
+Row <code>count_table[x,:]</code>: Probability distribution over all the characters as the next character given character <em>x</em> is a <em>categorical</em> distribution (aka <em>multinoulli</em> distribution, a special case of the <strong>multinomial</strong> distribution) over <code>vocab_size</code>(27) categories (character).<br>
 Generating new plausible English names using the above <code>probs</code> table</p>
 
 </div>
@@ -15301,7 +15300,7 @@ nchtesrqfenu.
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>By looking at the generated words, we can say that our count-based bigram language model is able to generate more plausible names than a uniform baseline model.</p>
-<h4 id="How-can-we-do-a-qunatitative-evaluation-of-these-models?">How can we do a qunatitative evaluation of these models?<a class="anchor-link" href="#How-can-we-do-a-qunatitative-evaluation-of-these-models?">&#182;</a></h4><p>We can use <strong>Maximum Likelihood Estimate (MLE)</strong> method to evaluate a model's performance. The goal of MLE is to maximize the likelihood (probability) of the data (D) w.r.t. model parameters (occurrence info learned from data)\
+<h4 id="How-can-we-do-a-qunatitative-evaluation-of-these-models?">How can we do a qunatitative evaluation of these models?<a class="anchor-link" href="#How-can-we-do-a-qunatitative-evaluation-of-these-models?">&#182;</a></h4><p>We can use <strong>Maximum Likelihood Estimate (MLE)</strong> method to evaluate a model's performance. The goal of MLE is to maximize the likelihood (probability) of the data (D) w.r.t. model parameters (occurrence info learned from data)<br>
 <strong>Maximizing</strong> the likelihood is equivalent to:</p>
 <ul>
 <li>maximizing the log likelihood (because log is a monotonic function)</li>
@@ -15309,28 +15308,28 @@ nchtesrqfenu.
 <li>minimizing the average negative log likelihood over the entire dataset</li>
 </ul>
 <p>In general, minimizing the average negative log likelihood over the entire dataset is used to evaluate a model's performance.</p>
-<p>$\mathrm{P}(D) = \mathrm{P}({W}_{1},{W}_{2},{W}_{3},...,{W}_{N})$\
-Since all the words occurr independently,\
-$\mathrm{P}(D) =\prod_{i = 1}^{N} P({W}_{i})$ here, D is the entire English names dataset\
-${W}_{i} = ({c}_{1}{c}_{2}{c}_{3}....{c}_{m})$ each word is a sequence of characters\
-Using the chain rule,\
-$P({W}_{i}) = P({c}_{1})P({c}_{2}\mid{c}_{1})P({c}_{3}\mid{c}_{1},{c}_{2})....P({c}_{m}\mid{c}_{1},{c}_{2}....{c}_{m-1})$\
+<p>$\mathrm{P}(D) = \mathrm{P}({W}_{1},{W}_{2},{W}_{3},...,{W}_{N})$<br>
+Since all the words occurr independently,<br>
+$\mathrm{P}(D) =\prod_{i = 1}^{N} P({W}_{i})$ here, D is the entire English names dataset<br>
+${W}_{i} = ({c}_{1}{c}_{2}{c}_{3}....{c}_{m})$ each word is a sequence of characters<br>
+Using the chain rule,<br>
+$P({W}_{i}) = P({c}_{1})P({c}_{2}\mid{c}_{1})P({c}_{3}\mid{c}_{1},{c}_{2})....P({c}_{m}\mid{c}_{1},{c}_{2}....{c}_{m-1})$<br>
 Using Markov assumption, we approximate each component in the product</p>
 <ul>
-<li><em>Unigram</em> Language model (LM): each character occurrs independently of any other character\
+<li><em>Unigram</em> Language model (LM): each character occurrs independently of any other character<br>
 $P({W}_{i}) = P({c}_{1})P({c}_{2})P({c}_{3})....P({c}_{m})$ </li>
-<li><em>Bi-gram</em> LM: every character is conditioned on previous character\
+<li><em>Bi-gram</em> LM: every character is conditioned on previous character<br>
 $P({W}_{i}) = P({c}_{1})P({c}_{2}\mid{c}_{1})P({c}_{3}\mid{c}_{2})....P({c}_{m}\mid{c}_{m-1})$ </li>
-<li><em>N-gram</em> LM: every character is conditioned on <em>N-1</em> previous characters\
-$P({W}_{i}) = P({c}_{1})P({c}_{2}\mid{c}_{1})P({c}_{3}\mid{c}_{2},{c}_{1})....P({c}_{m}\mid{c}_{m-N+1},{c}_{m-N+2},...{c}_{m-1})$\
-these <em>N-1</em> characters are called <em>context</em>\
-For unigram LM, no context\
-For bigram LM, context of one character (previous character)\</li>
+<li><em>N-gram</em> LM: every character is conditioned on <em>N-1</em> previous characters<br>
+$P({W}_{i}) = P({c}_{1})P({c}_{2}\mid{c}_{1})P({c}_{3}\mid{c}_{2},{c}_{1})....P({c}_{m}\mid{c}_{m-N+1},{c}_{m-N+2},...{c}_{m-1})$<br>
+these <em>N-1</em> characters are called <em>context</em><br>
+For unigram LM, no context<br>
+For bigram LM, context of one character (previous character)<br></li>
 </ul>
-<p>For our bigram LM model, Likelihood Estimate:\
-$\mathrm{P}(D) =\prod_{i = 1}^{N} P({c}_{i,1})P({c}_{i,2}\mid{c}_{i,1})P({c}_{i,3}\mid{c}_{i,2})....P({c}_{i,m}\mid{c}_{i,m-1})$\
-Log likelihood, $\log(\mathrm{P}(D)) = \sum_{i = 1}^{N} \sum_{j = 1}^{m} \log(P({c}_{i,j}\mid{c}_{i,j-1}))$\
-${\sf Average Log Likelihood} = \frac{1}{N}\sum_{i = 1}^{N} \sum_{j = 1}^{m} \log(P({c}_{i,j}\mid{c}_{i,j-1}))$\
+<p>For our bigram LM model, Likelihood Estimate:<br>
+$\mathrm{P}(D) =\prod_{i = 1}^{N} P({c}_{i,1})P({c}_{i,2}\mid{c}_{i,1})P({c}_{i,3}\mid{c}_{i,2})....P({c}_{i,m}\mid{c}_{i,m-1})$<br>
+Log likelihood, $\log(\mathrm{P}(D)) = \sum_{i = 1}^{N} \sum_{j = 1}^{m} \log(P({c}_{i,j}\mid{c}_{i,j-1}))$<br>
+${\sf Average Log Likelihood} = \frac{1}{N}\sum_{i = 1}^{N} \sum_{j = 1}^{m} \log(P({c}_{i,j}\mid{c}_{i,j-1}))$<br>
 ${\sf Average Neg Log Likelihood (NLL)} = -\frac{1}{N}\sum_{i = 1}^{N} \sum_{j = 1}^{m} \log(P({c}_{i,j}\mid{c}_{i,j-1}))$</p>
 <p>In short, log likelihood is the sum of log probabilities of all the bi-grams present in the training data.</p>
 <p>Let's compute negative log likelihood (NLL) for our model. We will compute NLL in two ways:</p>
@@ -15446,7 +15445,7 @@ nll=2.454014497322693
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Why log probability is used?\
+<p>Why log probability is used?<br>
 To avoid numerical <em>underflow</em> caused by multiplying really small numbers (numbers close to zero). Taking $\log$ of probability ($p\in[0,1]$) will unsqueeze the values because $\log(p)$ for $p \in [0,1]$ has value in range $[-\inf,0]$ and using $\log$ product rule ($\log(ab)=\log(a)+\log(b)$), the product will be replaced by summation.</p>
 
 </div>
@@ -15459,7 +15458,7 @@ To avoid numerical <em>underflow</em> caused by multiplying really small numbers
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h4 id="Label-Smoothing">Label Smoothing<a class="anchor-link" href="#Label-Smoothing">&#182;</a></h4><p>Why do we need label smoothing and what is label smoothing?\
+<h4 id="Label-Smoothing">Label Smoothing<a class="anchor-link" href="#Label-Smoothing">&#182;</a></h4><p>Why do we need label smoothing and what is label smoothing?<br>
 Let's compute the log likelihood of the word "Swechhabk"</p>
 
 </div>
@@ -15581,7 +15580,7 @@ nll=inf
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The bigram 'bk' has never occurred in our names dataset, therefore the probability of 'b' followed by 'k' is zero, taking $\log$ of zero reuslts in negative infinity value.\
+<p>The bigram 'bk' has never occurred in our names dataset, therefore the probability of 'b' followed by 'k' is zero, taking $\log$ of zero reuslts in negative infinity value.<br>
 We can correct the counts to avoid zero probabilities, one simple way is to add <strong>1</strong> to every count in <code>count_table</code>.</p>
 
 </div>
@@ -15704,7 +15703,7 @@ nll=4.108368647098541
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Looks like we have fixed infinity NLL issue.</p>
 <p>Any number <em>K</em> can be added as correction to counts ($K \in [1,2,3,...1000,..]$)</p>
-<p>What happens if a very large <em>K</em> is used for correction?\
+<p>What happens if a very large <em>K</em> is used for correction?<br>
 For each row, all the counts will be almost the same in magnitude; no significant difference between counts results in a uniform probability distribution. So, it's advised to use smaller values for <em>K</em>.</p>
 
 </div>
