@@ -19714,7 +19714,10 @@ all of MD as it is not optimized for dense, information rich UIs.
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">optim</span>
 <span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">from</span> <span class="nn">torch.optim.lr_scheduler</span> <span class="kn">import</span> <span class="n">LambdaLR</span>
 
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
 <span class="n">device</span>
 </pre>
@@ -20008,7 +20011,7 @@ all of MD as it is not optimized for dense, information rich UIs.
 <span class="k">class</span> <span class="nc">Language</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lang_name</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lang_name</span> <span class="o">=</span> <span class="n">lang_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">word_to_index</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">word_to_index</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;SOS&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;EOS&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;UNK&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;PAD&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">index_to_word</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;SOS&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;EOS&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;UNK&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="s2">&quot;PAD&quot;</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">word_to_count</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vocab_size</span> <span class="o">=</span> <span class="mi">4</span>
@@ -20265,7 +20268,7 @@ Creating source and target language vocab using pair_split[&#39;train&#39;]...
 Counted words:
 eng 2184
 fra 3526
-[&#39;they re very busy .&#39;, &#39;ils sont tres occupes .&#39;]
+[&#39;you re single .&#39;, &#39;vous etes celibataire .&#39;]
 </pre>
           </div>
         </div>
@@ -20365,10 +20368,12 @@ fra 3526
 
 
           <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-            <pre>[&#39;they re drunk .&#39;, &#39;elles sont saoules .&#39;]
-(tensor([  0, 223,  80,  58,   6,   1,   3,   3,   3,   3,   3,   3]), tensor([  0, 353, 351, 761,   7,   1,   3,   3,   3,   3,   3,   3,   3]))
-(tensor([  0, 223,  80,  58,   6,   1,   3,   3,   3,   3,   3,   3]), tensor([  0, 353, 351, 761,   7,   1,   3,   3,   3,   3,   3,   3,   3]))
-(&#39;SOS they re drunk . EOS PAD PAD PAD PAD PAD PAD&#39;, &#39;SOS elles sont saoules . EOS PAD PAD PAD PAD PAD PAD PAD&#39;)
+            <pre>[&#39;he is sure of success .&#39;, &#39;il est sur de son succes .&#39;]
+(tensor([   0,   16,   42,   35,  520, 1462,    6,    1,    3,    3,    3,    3]), tensor([   0,   26,   27,   53,  103, 1360,  966,    7,    1,    3,    3,    3,
+           3]))
+(tensor([   0,   16,   42,   35,  520, 1462,    6,    1,    3,    3,    3,    3]), tensor([   0,   26,   27,   53,  103, 1360,  966,    7,    1,    3,    3,    3,
+           3]))
+(&#39;SOS he is sure of success . EOS PAD PAD PAD PAD&#39;, &#39;SOS il est sur de son succes . EOS PAD PAD PAD PAD&#39;)
 </pre>
           </div>
         </div>
@@ -20397,8 +20402,10 @@ fra 3526
             <span class="c1"># decoder output shifted by one</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tgt</span> <span class="o">=</span> <span class="n">target</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#shape:(B,T)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tgt_y</span> <span class="o">=</span> <span class="n">target</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="c1"># padding mask: (B,T)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tgt_pad_mask</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_y</span> <span class="o">!=</span> <span class="n">pad_idx</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tgt_mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">causal_mask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt</span><span class="p">,</span> <span class="n">pad_idx</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">n_tokens</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_y</span> <span class="o">!=</span> <span class="n">pad_idx</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_pad_mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
 
     <span class="nd">@staticmethod</span>   
     <span class="k">def</span> <span class="nf">causal_mask</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">pad_idx</span><span class="p">):</span>
@@ -20407,8 +20414,8 @@ fra 3526
         <span class="c1"># causal attention mask: (1,T,T)</span>
         <span class="n">causal_attn_mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bool</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">target</span><span class="o">.</span><span class="n">device</span><span class="p">))</span>
         <span class="c1"># padding mask: (B,1,T)</span>
-        <span class="n">target_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">target</span> <span class="o">!=</span> <span class="n">pad_idx</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">target_mask</span> <span class="o">=</span> <span class="n">target_mask</span> <span class="o">&amp;</span> <span class="n">causal_attn_mask</span>
+        <span class="n">tgt_pad_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">target</span> <span class="o">!=</span> <span class="n">pad_idx</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">target_mask</span> <span class="o">=</span> <span class="n">tgt_pad_mask</span> <span class="o">&amp;</span> <span class="n">causal_attn_mask</span>
         <span class="k">return</span> <span class="n">target_mask</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># (B,1,T,T)</span>
 
         
@@ -20498,9 +20505,9 @@ fra 3526
 
 
           <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-            <pre>SOS he s such a jerk . EOS PAD PAD PAD PAD
-SOS c est un tel pauvre type ! EOS PAD PAD PAD
-c est un tel pauvre type ! EOS PAD PAD PAD PAD
+            <pre>SOS i m not married yet . EOS PAD PAD PAD PAD
+SOS je ne suis pas encore marie . EOS PAD PAD PAD
+je ne suis pas encore marie . EOS PAD PAD PAD PAD
 </pre>
           </div>
         </div>
@@ -20568,16 +20575,16 @@ c est un tel pauvre type ! EOS PAD PAD PAD PAD
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
           <div class="CodeMirror cm-s-jupyter">
             <div class=" highlight hl-ipython3">
-              <pre><span></span><span class="n">hyparam</span> <span class="o">=</span> <span class="p">{</span>
+              <pre><span></span><span class="c1"># model hyperparameters</span>
+<span class="n">model_hyparam</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;src_vocab_size&quot;</span><span class="p">:</span> <span class="n">src_lang</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span>
     <span class="s2">&quot;tgt_vocab_size&quot;</span><span class="p">:</span> <span class="n">target_lang</span><span class="o">.</span><span class="n">vocab_size</span><span class="p">,</span>
     <span class="s2">&quot;block_size&quot;</span><span class="p">:</span> <span class="n">BLOCK_SIZE</span><span class="p">,</span>
     <span class="s2">&quot;model_dim&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
     <span class="s2">&quot;n_layer&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
     <span class="s2">&quot;n_head&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="s2">&quot;cross_attention&quot;</span><span class="p">:</span><span class="kc">True</span>
+    <span class="s2">&quot;cross_attention&quot;</span><span class="p">:</span><span class="kc">False</span>
 <span class="p">}</span>
-<span class="n">mt_transformer</span> <span class="o">=</span> <span class="n">EncDecTransformer</span><span class="p">(</span><span class="o">**</span><span class="n">hyparam</span><span class="p">)</span>
 </pre>
             </div>
 
@@ -20596,7 +20603,7 @@ c est un tel pauvre type ! EOS PAD PAD PAD PAD
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
           <div class="CodeMirror cm-s-jupyter">
             <div class=" highlight hl-ipython3">
-              <pre><span></span><span class="n">batch</span> <span class="o">=</span> <span class="n">build_batch</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+              <pre><span></span><span class="n">batch</span> <span class="o">=</span> <span class="n">build_batch</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 <span class="n">batch</span>
 </pre>
             </div>
@@ -20622,7 +20629,7 @@ c est un tel pauvre type ! EOS PAD PAD PAD PAD
 
 
           <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-            <pre>&lt;__main__.Batch at 0x7f8b00c7ef40&gt;</pre>
+            <pre>&lt;__main__.Batch at 0x7facd031a340&gt;</pre>
           </div>
 
         </div>
@@ -20632,19 +20639,93 @@ c est un tel pauvre type ! EOS PAD PAD PAD PAD
     </div>
 
   </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="c1"># training hyperparameters</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">n_iters</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">eval_interval</span> <span class="o">=</span> <span class="mi">1</span><span class="c1">#100</span>
+<span class="n">base_lr</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">eval_iters</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">warmup_steps</span> <span class="o">=</span> <span class="mi">5</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">
+        </div>
+        <div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+          <p>Vary the learning rate over the course of training, according to the formula:<br>
+            <br>
+            $lr = {d_{model}}^{-0.5}*\min({step\_num}^{-0.5}, step\_num * {warmup\_steps}^{-1.5})$
+            <br>
+            This corresponds to increasing the learning rate linearly for the first $warmup\_steps$ training steps, and
+            decreasing it thereafter proportionally to the inverse square root of the step number.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="k">def</span> <span class="nf">learning_rate</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">model_size</span><span class="p">,</span> <span class="n">factor</span><span class="p">,</span> <span class="n">warmup</span><span class="p">):</span>
+    <span class="c1"># default the step to 1 for LambdaLR function to avoid zero raising to negative power</span>
+    <span class="k">if</span> <span class="n">step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">factor</span> <span class="o">*</span> <span class="p">(</span>
+        <span class="n">model_size</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="n">step</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">step</span> <span class="o">*</span> <span class="n">warmup</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">))</span>
+    <span class="p">)</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
   <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
     <div class="jp-Cell-inputWrapper">
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
       <div class="jp-InputArea jp-Cell-inputArea">
-        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
           <div class="CodeMirror cm-s-jupyter">
             <div class=" highlight hl-ipython3">
-              <pre><span></span><span class="n">mt_transformer</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">src</span><span class="p">,</span> 
-            <span class="n">batch</span><span class="o">.</span><span class="n">src_mask</span><span class="p">,</span>
-            <span class="n">batch</span><span class="o">.</span><span class="n">tgt</span><span class="p">,</span>
-            <span class="n">batch</span><span class="o">.</span><span class="n">tgt_mask</span><span class="p">,</span><span class="n">batch</span><span class="o">.</span><span class="n">tgt_y</span><span class="p">)</span>
+              <pre><span></span><span class="n">mt_transformer</span> <span class="o">=</span> <span class="n">EncDecTransformer</span><span class="p">(</span><span class="o">**</span><span class="n">model_hyparam</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">AdamW</span><span class="p">(</span><span class="n">mt_transformer</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">base_lr</span><span class="p">,</span> <span class="n">betas</span><span class="o">=</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">),</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+<span class="n">lr_scheduler</span> <span class="o">=</span> <span class="n">LambdaLR</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">lr_lambda</span><span class="o">=</span><span class="k">lambda</span> <span class="n">step</span><span class="p">:</span> <span class="n">learning_rate</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> 
+                                                                        <span class="n">model_hyparam</span><span class="p">[</span><span class="s2">&quot;model_dim&quot;</span><span class="p">],</span> 
+                                                                        <span class="n">factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">warmup</span><span class="o">=</span><span class="n">warmup_steps</span><span class="p">))</span>
+
+<span class="c1"># print the number of parameters in the model</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">mt_transformer</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span><span class="o">/</span><span class="mf">1e6</span><span class="p">,</span> <span class="s1">&#39;M parameters&#39;</span><span class="p">)</span>
 </pre>
             </div>
 
@@ -20667,52 +20748,33 @@ c est un tel pauvre type ! EOS PAD PAD PAD PAD
 
 
           <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-            <pre>torch.Size([2, 1, 1, 12])
-torch.Size([2, 12, 2, 16])
-torch.Size([2, 12, 32])
-torch.Size([2, 1, 1, 12])
-torch.Size([2, 12, 2, 16])
-torch.Size([2, 12, 32])
-torch.Size([2, 1, 12, 12])
-torch.Size([2, 12, 2, 16])
-torch.Size([2, 12, 32])
-torch.Size([2, 1, 1, 12])
-torch.Size([2, 12, 2, 16])
-torch.Size([2, 12, 32])
-torch.Size([2, 1, 12, 12])
-torch.Size([2, 12, 2, 16])
-torch.Size([2, 12, 32])
-torch.Size([2, 1, 1, 12])
-torch.Size([2, 12, 2, 16])
-torch.Size([2, 12, 32])
+            <pre>0.350406 M parameters
 </pre>
           </div>
         </div>
 
-        <div class="jp-OutputArea-child">
-
-
-          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[24]:</div>
-
-
-
-
-          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-            <pre>(tensor([[-0.4225, -0.0354, -0.3371,  ...,  0.1326, -0.1471,  0.0289],
-         [-0.8744, -0.1260,  0.5059,  ...,  0.1743, -0.1695,  0.4680],
-         [-0.0316, -0.5198, -0.2695,  ..., -1.2166,  0.5251, -0.1177],
-         ...,
-         [-0.4402, -0.0405,  0.4402,  ..., -0.2019, -0.6821, -0.1396],
-         [-0.0416, -0.3128,  0.8035,  ..., -0.6277,  0.0976,  0.4441],
-         [-0.3491, -0.2754,  0.2962,  ...,  0.1353,  0.8226, -0.2927]],
-        grad_fn=&lt;ViewBackward0&gt;),
- tensor(8.1203, grad_fn=&lt;NllLossBackward0&gt;))</pre>
-          </div>
-
-        </div>
-
       </div>
 
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">train_losses</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">val_losses</span> <span class="o">=</span> <span class="p">[]</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -20725,7 +20787,27 @@ torch.Size([2, 12, 32])
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
           <div class="CodeMirror cm-s-jupyter">
             <div class=" highlight hl-ipython3">
-              <pre><span></span><span class="n">batch</span><span class="o">.</span><span class="n">src</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">batch</span><span class="o">.</span><span class="n">src_mask</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+              <pre><span></span><span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">compute_loss</span><span class="p">():</span>
+    <span class="n">mt_transformer</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="n">out_loss</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">split</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="s2">&quot;val&quot;</span><span class="p">]:</span>
+        <span class="n">running_loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="n">total_tokens</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">eval_iters</span><span class="p">):</span>
+            <span class="n">batch</span> <span class="o">=</span> <span class="n">build_batch</span><span class="p">(</span><span class="n">split</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">mt_transformer</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">src</span><span class="p">,</span> 
+                                <span class="n">batch</span><span class="o">.</span><span class="n">src_mask</span><span class="p">,</span>
+                                <span class="n">batch</span><span class="o">.</span><span class="n">tgt</span><span class="p">,</span>
+                                <span class="n">batch</span><span class="o">.</span><span class="n">tgt_mask</span><span class="p">,</span>
+                                <span class="n">batch</span><span class="o">.</span><span class="n">tgt_y</span><span class="p">,</span>
+                                <span class="n">batch</span><span class="o">.</span><span class="n">tgt_pad_mask</span><span class="p">)</span>
+            <span class="n">running_loss</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">total_tokens</span> <span class="o">+=</span> <span class="n">batch</span><span class="o">.</span><span class="n">n_tokens</span>
+        <span class="n">out_loss</span><span class="p">[</span><span class="n">split</span><span class="p">]</span> <span class="o">=</span> <span class="n">running_loss</span><span class="o">/</span><span class="n">total_tokens</span>
+    <span class="n">mt_transformer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">out_loss</span>
+<span class="n">compute_loss</span><span class="p">()</span>
 </pre>
             </div>
 
@@ -20750,9 +20832,7 @@ torch.Size([2, 12, 32])
 
 
           <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-            <pre>(tensor([[ 0,  4,  5, 74,  6,  1,  3,  3,  3,  3,  3,  3]]),
- tensor([[[[ True,  True,  True,  True,  True,  True, False, False, False, False,
-            False, False]]]]))</pre>
+            <pre>{&#39;train&#39;: 0.07855133252723195, &#39;val&#39;: 0.06314297802043412}</pre>
           </div>
 
         </div>
@@ -20767,11 +20847,33 @@ torch.Size([2, 12, 32])
       <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
       </div>
       <div class="jp-InputArea jp-Cell-inputArea">
-        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[27]:</div>
         <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
           <div class="CodeMirror cm-s-jupyter">
             <div class=" highlight hl-ipython3">
-              <pre><span></span><span class="n">mt_transformer</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">src</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="n">batch</span><span class="o">.</span><span class="n">src_mask</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>
+              <pre><span></span><span class="c1"># training loop</span>
+<span class="k">for</span> <span class="nb">iter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iters</span><span class="p">):</span>
+    <span class="n">mt_transformer</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+    <span class="n">batch</span> <span class="o">=</span> <span class="n">build_batch</span><span class="p">(</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">loss</span> <span class="o">=</span> <span class="n">mt_transformer</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">src</span><span class="p">,</span> 
+                                <span class="n">batch</span><span class="o">.</span><span class="n">src_mask</span><span class="p">,</span>
+                                <span class="n">batch</span><span class="o">.</span><span class="n">tgt</span><span class="p">,</span>
+                                <span class="n">batch</span><span class="o">.</span><span class="n">tgt_mask</span><span class="p">,</span>
+                                <span class="n">batch</span><span class="o">.</span><span class="n">tgt_y</span><span class="p">,</span>
+                                <span class="n">batch</span><span class="o">.</span><span class="n">tgt_pad_mask</span><span class="p">)</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">(</span><span class="n">set_to_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="n">lr_scheduler</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="nb">iter</span> <span class="o">%</span> <span class="n">eval_interval</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">iter</span> <span class="o">==</span> <span class="n">n_iters</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">losses</span> <span class="o">=</span> <span class="n">compute_loss</span><span class="p">()</span>
+        <span class="n">train_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">])</span>
+        <span class="n">val_losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;step </span><span class="si">{</span><span class="nb">iter</span><span class="si">}</span><span class="s2">: train loss </span><span class="si">{</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, val loss </span><span class="si">{</span><span class="n">losses</span><span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># save model checkpoint</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">mt_transformer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="s2">&quot;mt_transformer.pt&quot;</span><span class="p">)</span>
+    
 </pre>
             </div>
 
@@ -20794,17 +20896,108 @@ torch.Size([2, 12, 32])
 
 
           <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-            <pre>torch.Size([1, 1, 1, 12])
-torch.Size([1, 12, 2, 16])
-torch.Size([1, 12, 32])
-torch.Size([1, 1, 1, 12])
-torch.Size([1, 12, 2, 16])
-torch.Size([1, 12, 32])
-torch.Size([1, 1, 1, 1])
-torch.Size([1, 1, 2, 16])
-torch.Size([1, 1, 32])
+            <pre>step 0: train loss 0.0722, val loss 0.0564
+step 1: train loss 0.0668, val loss 0.0556
+step 2: train loss 0.0537, val loss 0.0492
+step 3: train loss 0.0458, val loss 0.0435
+step 4: train loss 0.0511, val loss 0.0477
+step 5: train loss 0.0507, val loss 0.0540
+step 6: train loss 0.0471, val loss 0.0438
+step 7: train loss 0.0521, val loss 0.0432
+step 8: train loss 0.0461, val loss 0.0460
+step 9: train loss 0.0414, val loss 0.0427
 </pre>
           </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[28]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">train_losses</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">val_losses</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+
+        <div class="jp-OutputArea-child">
+
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[28]:</div>
+
+
+
+
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>(0.041378151286732064, 0.04274626944562514)</pre>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[29]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_losses</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_losses</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;val&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
+
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+
+        <div class="jp-OutputArea-child">
+
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[29]:</div>
+
+
+
+
+          <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+            <pre>&lt;matplotlib.legend.Legend at 0x7fad04b80df0&gt;</pre>
+          </div>
+
         </div>
 
         <div class="jp-OutputArea-child">
@@ -20813,91 +21006,61 @@ torch.Size([1, 1, 32])
           <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
-          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-            <pre>
-<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
-<span class="ansi-red-fg">RuntimeError</span>                              Traceback (most recent call last)
-<span class="ansi-green-intense-fg ansi-bold">/Users/swechha/projects/nlp-from-scratch/eng-fr-neural-machine-translation/transformer_MT.ipynb Cell 31</span> in <span class="ansi-cyan-fg">&lt;cell line: 1&gt;</span><span class="ansi-blue-fg">()</span>
-<span class="ansi-green-fg">----&gt; &lt;a href=&#39;vscode-notebook-cell:/Users/swechha/projects/nlp-from-scratch/eng-fr-neural-machine-translation/transformer_MT.ipynb#X50sZmlsZQ%3D%3D?line=0&#39;&gt;1&lt;/a&gt;</span> mt_transformer.generate(batch.src[0:1], batch.src_mask[0:1])
 
-File <span class="ansi-green-fg">~/projects/nlp-from-scratch/eng-fr-neural-machine-translation/../transformers/transformer.py:84</span>, in <span class="ansi-cyan-fg">EncDecTransformer.generate</span><span class="ansi-blue-fg">(self, src, src_mask, max_tokens, sos, eos)</span>
-<span class="ansi-green-intense-fg ansi-bold">     73</span> tgt_mask = torch.tril(
-<span class="ansi-green-intense-fg ansi-bold">     74</span>     torch.ones(
-<span class="ansi-green-intense-fg ansi-bold">     75</span>         1,
-<span class="ansi-green-fg">   (...)</span>
-<span class="ansi-green-intense-fg ansi-bold">     81</span>     )
-<span class="ansi-green-intense-fg ansi-bold">     82</span> )
-<span class="ansi-green-intense-fg ansi-bold">     83</span> # block_size is the maximum context length of our LM, therefore we can only use last block_size characters as input to generate next character
-<span class="ansi-green-fg">---&gt; 84</span> dec_out = self.decode(tgt, tgt_mask, memory, src_mask)
-<span class="ansi-green-intense-fg ansi-bold">     85</span> logits = self.decoded_target_proj(dec_out)
-<span class="ansi-green-intense-fg ansi-bold">     86</span> # dec_inp: (B,T_dec) logits: (B, T_dec, vocab_size)
 
-File <span class="ansi-green-fg">~/projects/nlp-from-scratch/eng-fr-neural-machine-translation/../transformers/transformer.py:50</span>, in <span class="ansi-cyan-fg">EncDecTransformer.decode</span><span class="ansi-blue-fg">(self, target, target_mask, memory, src_mask)</span>
-<span class="ansi-green-intense-fg ansi-bold">     47</span> # broadcast pos_emb along the batch dimension of token_emb
-<span class="ansi-green-intense-fg ansi-bold">     48</span> token_emb = token_emb + pos_emb
-<span class="ansi-green-fg">---&gt; 50</span> return self.decoder(token_emb, target_mask, memory, src_mask)
+          <div class="jp-RenderedImage jp-OutputArea-output ">
+            <img
+              src="data:image/png;base64,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"
+              class="
+jp-needs-light-background
+">
+          </div>
 
-File <span class="ansi-green-fg">/opt/anaconda3/envs/ml_env_3.9/lib/python3.9/site-packages/torch/nn/modules/module.py:1194</span>, in <span class="ansi-cyan-fg">Module._call_impl</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1190</span> # If we don&#39;t have any hooks, we want to skip the rest of the logic in
-<span class="ansi-green-intense-fg ansi-bold">   1191</span> # this function, and just call forward.
-<span class="ansi-green-intense-fg ansi-bold">   1192</span> if not (self._backward_hooks or self._forward_hooks or self._forward_pre_hooks or _global_backward_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1193</span>         or _global_forward_hooks or _global_forward_pre_hooks):
-<span class="ansi-green-fg">-&gt; 1194</span>     return forward_call(*input, **kwargs)
-<span class="ansi-green-intense-fg ansi-bold">   1195</span> # Do not call functions when jit is used
-<span class="ansi-green-intense-fg ansi-bold">   1196</span> full_backward_hooks, non_full_backward_hooks = [], []
+        </div>
 
-File <span class="ansi-green-fg">~/projects/nlp-from-scratch/eng-fr-neural-machine-translation/../transformers/transformer.py:128</span>, in <span class="ansi-cyan-fg">Decoder.forward</span><span class="ansi-blue-fg">(self, x, target_mask, memory, src_mask)</span>
-<span class="ansi-green-intense-fg ansi-bold">    126</span> def forward(self, x, target_mask, memory=None, src_mask=None):
-<span class="ansi-green-intense-fg ansi-bold">    127</span>     for layer in self.layers:
-<span class="ansi-green-fg">--&gt; 128</span>         x = layer(x, target_mask, memory, src_mask)
-<span class="ansi-green-intense-fg ansi-bold">    129</span>     return self.norm(x)
+      </div>
 
-File <span class="ansi-green-fg">/opt/anaconda3/envs/ml_env_3.9/lib/python3.9/site-packages/torch/nn/modules/module.py:1194</span>, in <span class="ansi-cyan-fg">Module._call_impl</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1190</span> # If we don&#39;t have any hooks, we want to skip the rest of the logic in
-<span class="ansi-green-intense-fg ansi-bold">   1191</span> # this function, and just call forward.
-<span class="ansi-green-intense-fg ansi-bold">   1192</span> if not (self._backward_hooks or self._forward_hooks or self._forward_pre_hooks or _global_backward_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1193</span>         or _global_forward_hooks or _global_forward_pre_hooks):
-<span class="ansi-green-fg">-&gt; 1194</span>     return forward_call(*input, **kwargs)
-<span class="ansi-green-intense-fg ansi-bold">   1195</span> # Do not call functions when jit is used
-<span class="ansi-green-intense-fg ansi-bold">   1196</span> full_backward_hooks, non_full_backward_hooks = [], []
+    </div>
 
-File <span class="ansi-green-fg">~/projects/nlp-from-scratch/eng-fr-neural-machine-translation/../transformers/transformer.py:175</span>, in <span class="ansi-cyan-fg">TransformerDecoderBlock.forward</span><span class="ansi-blue-fg">(self, x, tgt_mask, memory, src_mask)</span>
-<span class="ansi-green-intense-fg ansi-bold">    173</span> x = x + self.self_attn_layer(x_norm, x_norm, x_norm, tgt_mask)
-<span class="ansi-green-intense-fg ansi-bold">    174</span> if self.cross_attention:
-<span class="ansi-green-fg">--&gt; 175</span>     x = x + self.cross_attn_layer(
-<span class="ansi-green-intense-fg ansi-bold">    176</span>         self.cross_attn_layer_norm(x),  # query
-<span class="ansi-green-intense-fg ansi-bold">    177</span>         memory,  # key
-<span class="ansi-green-intense-fg ansi-bold">    178</span>         memory,  # value
-<span class="ansi-green-intense-fg ansi-bold">    179</span>         src_mask,
-<span class="ansi-green-intense-fg ansi-bold">    180</span>     )
-<span class="ansi-green-intense-fg ansi-bold">    181</span> x = x + self.ff_layer(self.ffn_layer_norm(x))
-<span class="ansi-green-intense-fg ansi-bold">    182</span> return x
+  </div>
+  <div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+    <div class="jp-Cell-inputWrapper">
+      <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+      </div>
+      <div class="jp-InputArea jp-Cell-inputArea">
+        <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div>
+        <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+          <div class="CodeMirror cm-s-jupyter">
+            <div class=" highlight hl-ipython3">
+              <pre><span></span><span class="n">batch</span> <span class="o">=</span> <span class="n">build_batch</span><span class="p">(</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src_language</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">src_lang</span><span class="o">.</span><span class="n">tensor_to_sentence</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">src</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">mt_transformer</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">batch</span><span class="o">.</span><span class="n">src</span><span class="p">,</span> <span class="n">batch</span><span class="o">.</span><span class="n">src_mask</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">target_language</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">target_lang</span><span class="o">.</span><span class="n">tensor_to_sentence</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre>
+            </div>
 
-File <span class="ansi-green-fg">/opt/anaconda3/envs/ml_env_3.9/lib/python3.9/site-packages/torch/nn/modules/module.py:1194</span>, in <span class="ansi-cyan-fg">Module._call_impl</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
-<span class="ansi-green-intense-fg ansi-bold">   1190</span> # If we don&#39;t have any hooks, we want to skip the rest of the logic in
-<span class="ansi-green-intense-fg ansi-bold">   1191</span> # this function, and just call forward.
-<span class="ansi-green-intense-fg ansi-bold">   1192</span> if not (self._backward_hooks or self._forward_hooks or self._forward_pre_hooks or _global_backward_hooks
-<span class="ansi-green-intense-fg ansi-bold">   1193</span>         or _global_forward_hooks or _global_forward_pre_hooks):
-<span class="ansi-green-fg">-&gt; 1194</span>     return forward_call(*input, **kwargs)
-<span class="ansi-green-intense-fg ansi-bold">   1195</span> # Do not call functions when jit is used
-<span class="ansi-green-intense-fg ansi-bold">   1196</span> full_backward_hooks, non_full_backward_hooks = [], []
+          </div>
+        </div>
+      </div>
+    </div>
 
-File <span class="ansi-green-fg">~/projects/nlp-from-scratch/eng-fr-neural-machine-translation/../transformers/transformer.py:223</span>, in <span class="ansi-cyan-fg">MultiHeadAttention.forward</span><span class="ansi-blue-fg">(self, query, key, value, mask)</span>
-<span class="ansi-green-intense-fg ansi-bold">    217</span> B, T, model_dim = query.shape
-<span class="ansi-green-intense-fg ansi-bold">    218</span> query = (
-<span class="ansi-green-intense-fg ansi-bold">    219</span>     self.query_proj(query)
-<span class="ansi-green-intense-fg ansi-bold">    220</span>     .view(B, T, self.n_head, self.head_dim)
-<span class="ansi-green-intense-fg ansi-bold">    221</span>     .transpose(1, 2)
-<span class="ansi-green-intense-fg ansi-bold">    222</span> )
-<span class="ansi-green-fg">--&gt; 223</span> key = self.key_proj(key).view(B, T, self.n_head, self.head_dim).transpose(1, 2)
-<span class="ansi-green-intense-fg ansi-bold">    224</span> value = (
-<span class="ansi-green-intense-fg ansi-bold">    225</span>     self.value_proj(value)
-<span class="ansi-green-intense-fg ansi-bold">    226</span>     .view(B, T, self.n_head, self.head_dim)
-<span class="ansi-green-intense-fg ansi-bold">    227</span>     .transpose(1, 2)
-<span class="ansi-green-intense-fg ansi-bold">    228</span> )
-<span class="ansi-green-intense-fg ansi-bold">    230</span> # head_out: (B,T,n_head,head_dim)
+    <div class="jp-Cell-outputWrapper">
+      <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+      </div>
 
-<span class="ansi-red-fg">RuntimeError</span>: shape &#39;[1, 1, 2, 16]&#39; is invalid for input of size 384</pre>
+
+      <div class="jp-OutputArea jp-Cell-outputArea">
+
+        <div class="jp-OutputArea-child">
+
+
+          <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+          <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+            <pre>eng: SOS we re still getting to know each other . EOS PAD
+fra: SOS tu viens ne font a si un ainsi fiere ennuis une
+</pre>
           </div>
         </div>
 
